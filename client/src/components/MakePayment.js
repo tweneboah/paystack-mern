@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { makePayment } from '../redux/paymentActions';
+import Loading from './Loading';
+import Message from './Message';
 
 const MakePayment = () => {
   const [user, setUser] = useState('');
@@ -9,10 +11,20 @@ const MakePayment = () => {
 
   //dispatch
   const dispatch = useDispatch();
-  //submit
-  const formSubmitHandler = e => {
+  const payment = useSelector(state => state.payment);
+
+  const { loading, error } = payment;
+  console.log(loading, error);
+
+  const formSubmitHandler = async e => {
+    const paymentDetails = { user, email, amount };
     e.preventDefault();
-    dispatch(makePayment(user, email, amount));
+    dispatch(
+      makePayment(
+        'https://api.paystack.co/transaction/initialize',
+        paymentDetails
+      )
+    );
   };
 
   return (
@@ -20,7 +32,7 @@ const MakePayment = () => {
       <div className='col-lg-6 col-md-6 m-auto'>
         <div className='container'>
           <h1 className='text-center'>Make payment</h1>
-
+          {loading ? <Loading /> : error && <Message />}
           <form onSubmit={formSubmitHandler}>
             <fieldset>
               <div className='form-group'>

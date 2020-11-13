@@ -5,6 +5,8 @@ import paymentReducer from './paymentReducer';
 
 const middleware = [thunk];
 
+const initializeState = { amount: '899' };
+
 const reducer = combineReducers({
   payment: paymentReducer,
 });
