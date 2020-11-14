@@ -4,12 +4,10 @@ import { PAYMENT_FAIL, PAYMENT_REQUEST, PAYMENT_SUCCESS } from './ActionTypes';
 
 export const makePayment = (route, details) => {
   //For redirect
-
   const openInNewTab = url => {
     const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
     if (newWindow) newWindow.opener = null;
   };
-
   return async dispatch => {
     try {
       dispatch({

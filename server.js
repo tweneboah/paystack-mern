@@ -2,15 +2,16 @@ const express = require('express');
 const dotenv = require('dotenv');
 const Payment = require('./models/Payment');
 const Axios = require('axios');
-dotenv.config();
-
-const app = express();
 const cors = require('cors');
+require('./config/mongooseDbConnect')(); //Calling DB
+dotenv.config();
+const app = express();
 
+//Middlewares
 app.use(cors());
-
 app.use(express.json());
 
+//Routes
 app.get('/', async (req, res) => res.send('PAYSTACK'));
 
 //NOTE:
@@ -46,6 +47,17 @@ app.post('/paystack/get', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(400).json({ error });
+  }
+});
+
+//Webhook
+app.post('/paystack/webhook', (req, res) => {
+  try {
+    let event = req.body;
+    console.log(event);
+  } catch (err) {
+    console.log(err.message);
+    console.log(err);
   }
 });
 

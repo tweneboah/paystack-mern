@@ -17,7 +17,13 @@ const MakePayment = () => {
   console.log(loading, error);
 
   const formSubmitHandler = async e => {
-    const paymentDetails = { user, email, amount };
+    const paymentDetails = {
+      user,
+      email,
+      amount,
+      callback_url: 'http://localhost:3000/payment',
+      channels: ['card', 'bank', 'ussd', 'qr', 'mobile_money', 'bank_transfer'],
+    };
     e.preventDefault();
     dispatch(
       makePayment(
