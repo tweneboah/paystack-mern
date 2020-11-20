@@ -93,6 +93,7 @@ app.post("/paystack/webhook", async (req, res) => {
         {
           paidForVacation: true,
           paymentDetails: webHookData,
+          paymentHistory: [...paidUser.paymentHistory, webHookData],
         },
         { new: true }
       );

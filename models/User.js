@@ -45,6 +45,11 @@ const UserSchema = new Schema({
   phone: { type: String, length: 11 },
   dob: { type: String },
   gender: { type: String },
+  paymentHistory: [
+    {
+      type: Object,
+    },
+  ],
   lastSeen: {
     type: Date,
   },

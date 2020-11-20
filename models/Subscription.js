@@ -30,6 +30,10 @@ const SubscriptionSchema = new Schema({
   validTill: Date,
   referenceID: String,
   paidOn: Date,
+  subaccount: {
+    type: Object,
+    default: {},
+  },
   domain: String,
   amount: Number,
   nextPaymentDate: Date,
