@@ -1,26 +1,27 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { makePayment } from '../redux/paymentActions';
+import { makePayment } from '../redux/actions/paymentActions';
 import Loading from './Loading';
 import Message from './Message';
 
-const MakePayment = () => {
+const MakePayment = props => {
   const [user, setUser] = useState('');
-  const [email, setemail] = useState('');
-  const [amount, setAmount] = useState('');
-
+  const [email, setemail] = useState();
+  const [amount, setAmount] = useState(
+    props.history.location.search.split('=')[1]
+  );
+  console.log(props.history.location.search.split('=')[1]);
   //dispatch
   const dispatch = useDispatch();
   const payment = useSelector(state => state.payment);
 
   const { loading, error } = payment;
-  console.log(loading, error);
 
   const formSubmitHandler = async e => {
     const paymentDetails = {
       user,
       email,
-      amount,
+      amount: amount * 100,
       callback_url: 'http://localhost:3000/payment',
       channels: ['card', 'bank', 'ussd', 'qr', 'mobile_money', 'bank_transfer'],
     };
@@ -33,6 +34,7 @@ const MakePayment = () => {
     );
   };
 
+  // setAmount(props.history.location.search.split('=')[1]);
   return (
     <div className='row container-height'>
       <div className='col-lg-6 col-md-6 m-auto'>
@@ -42,7 +44,6 @@ const MakePayment = () => {
           <form onSubmit={formSubmitHandler}>
             <fieldset>
               <div className='form-group'>
-                <label htmlFor='exampleInputEmail1'>User</label>
                 <input
                   value={user}
                   onChange={e => setUser(e.target.value)}
@@ -54,7 +55,6 @@ const MakePayment = () => {
                 />
               </div>
               <div className='form-group'>
-                <label htmlFor='exampleInputEmail1'>Email address</label>
                 <input
                   value={email}
                   onChange={e => setemail(e.target.value)}
@@ -66,14 +66,13 @@ const MakePayment = () => {
                 />
               </div>
               <div className='form-group'>
-                <label htmlFor='exampleInputPassword1'>Amount</label>
                 <input
+                  disabled
                   value={amount}
-                  onChange={e => setAmount(e.target.value)}
                   type='number'
                   className='form-control'
                   id='exampleInputPassword1'
-                  placeholder='Password'
+                  placeholder='Enter Amount'
                 />
               </div>
               <button type='submit' className='btn btn-info m-auto'>

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { PAYMENT_FAIL, PAYMENT_REQUEST, PAYMENT_SUCCESS } from './ActionTypes';
+import { PAYMENT_FAIL, PAYMENT_REQUEST, PAYMENT_SUCCESS } from '../ActionTypes';
 
 export const makePayment = (route, details) => {
   //For redirect
@@ -18,17 +18,16 @@ export const makePayment = (route, details) => {
       };
 
       const { data } = await axios.post(
-        '/paystack',
-        { route, data: details },
+        '/paystack-post-handler',
+        { paystackUrl: route, data: details },
         config
       );
-
       dispatch({
         type: PAYMENT_SUCCESS,
         payload: data,
       });
       //Automatic redirect
-      openInNewTab(data.response.data.authorization_url);
+      openInNewTab(data.data.authorization_url);
     } catch (error) {
       dispatch({
         type: PAYMENT_FAIL,

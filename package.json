@@ -4,8 +4,8 @@
   "description": "Paystack payment system integration with MERN Stack",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "server": "nodemon app",
+    "start": "node -r esm server.js",
+    "server": "nodemon -r esm server.js",
     "client": "npm run start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
@@ -28,6 +28,7 @@
     "dotenv": "^8.2.0",
     "esm": "^3.2.25",
     "express": "^4.17.1",
+    "express-async-handler": "^1.1.4",
     "mongoose": "^5.10.11",
     "mongoose-auto-increment": "^5.0.1"
   },
