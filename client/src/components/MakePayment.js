@@ -1,31 +1,47 @@
+// import React, { useState } from "react";
+// import { useDispatch, useSelector } from "react-redux";
+// import { makePayment } from "../redux/paymentActions";
+// import Loading from "./Loading";
+// import Message from "./Message";
+
+// const MakePayment = () => {
+//   const [user, setUser] = useState("");
+//   const [email, setemail] = useState("");
+//   const [amount, setAmount] = useState("");
+
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { makePayment } from "../redux/paymentActions";
+import { makePayment } from "../redux/actions/paymentActions";
 import Loading from "./Loading";
 import Message from "./Message";
+import { useLocation } from "react-router-dom";
 
-const MakePayment = () => {
+const MakePayment = (props) => {
+  let location = useLocation();
+  console.log(location.state);
   const [user, setUser] = useState("");
-  const [email, setemail] = useState("");
-  const [amount, setAmount] = useState("");
-
+  const [email, setemail] = useState();
+  const [amount, setAmount] = useState(
+    props.history.location.search.split("=")[1]
+  );
+  console.log(props.history.location.search.split("=")[1]);
   //dispatch
   const dispatch = useDispatch();
   const payment = useSelector((state) => state.payment);
 
   const { loading, error } = payment;
-  console.log(loading, error);
 
   const formSubmitHandler = async (e) => {
+    console.log(location.state);
     const paymentDetails = {
-      user,
+      // user,
       email,
-      subaccount: "ACCT_sqoshxezjhzbmma" || user.subaccount.subaccountcode,
-      // onClose: (e) => console.log(e),
+      subaccount: location?.state?.author?.subAccount?.subaccount_code,
       amount: amount * 100,
       callback_url: "http://localhost:3000/payment",
-      channels: ["card", "bank", "ussd", "qr", "mobile_money", "bank_transfer"],
+      // channels: ["card", "bank", "ussd", "qr", "mobile_money", "bank_transfer"],
     };
+    console.log(paymentDetails);
     e.preventDefault();
     dispatch(
       makePayment(
@@ -35,6 +51,7 @@ const MakePayment = () => {
     );
   };
 
+  // setAmount(props.history.location.search.split('=')[1]);
   return (
     <div className="row container-height">
       <div className="col-lg-6 col-md-6 m-auto">
@@ -44,7 +61,6 @@ const MakePayment = () => {
           <form onSubmit={formSubmitHandler}>
             <fieldset>
               <div className="form-group">
-                <label htmlFor="exampleInputEmail1">User</label>
                 <input
                   value={user}
                   onChange={(e) => setUser(e.target.value)}
@@ -56,7 +72,6 @@ const MakePayment = () => {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="exampleInputEmail1">Email address</label>
                 <input
                   value={email}
                   onChange={(e) => setemail(e.target.value)}
@@ -68,8 +83,8 @@ const MakePayment = () => {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="exampleInputPassword1">Amount</label>
                 <input
+                  disabled
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   type="number"
@@ -81,6 +96,8 @@ const MakePayment = () => {
               <button type="submit" className="btn btn-info m-auto">
                 Pay
               </button>
+
+              <div>Merchant: {location.state.author.fullName}</div>
             </fieldset>
           </form>
         </div>

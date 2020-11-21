@@ -13,4 +13,4 @@ const mongooseDbConnect = async () => {
   }
 };
 
-module.exports = mongooseDbConnect;
+export { mongooseDbConnect };

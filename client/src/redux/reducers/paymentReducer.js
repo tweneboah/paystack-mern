@@ -1,4 +1,4 @@
-import { PAYMENT_FAIL, PAYMENT_REQUEST, PAYMENT_SUCCESS } from './ActionTypes';
+import { PAYMENT_FAIL, PAYMENT_REQUEST, PAYMENT_SUCCESS } from '../ActionTypes';
 
 const paymentReducer = (state = {}, action) => {
   switch (action.type) {

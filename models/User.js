@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const autoIncrement = require("mongoose-auto-increment");
+const autoIncrement = require('mongoose-auto-increment');
 autoIncrement.initialize(mongoose.connection);
 
 const UserSchema = new Schema({
@@ -29,15 +29,15 @@ const UserSchema = new Schema({
     type: Date,
     default: Date.now() + 86400000, //24hours
   },
-  firstName: { type: String, default: "" },
-  lastName: { type: String, default: "" },
+  firstName: { type: String, default: '' },
+  lastName: { type: String, default: '' },
   bankAccounts: [
     {
-      nuban: { type: String, default: "" },
+      nuban: { type: String, default: '' },
       default: { type: Boolean, default: false },
-      name: { type: String, default: "" },
-      bankCode: { type: String, default: "" },
-      bankName: { type: String, default: "" },
+      name: { type: String, default: '' },
+      bankCode: { type: String, default: '' },
+      bankName: { type: String, default: '' },
     },
   ],
   resetToken: { type: String },
@@ -70,23 +70,23 @@ const UserSchema = new Schema({
     },
   ],
   signature: {
-    id: { type: String, default: "" },
+    id: { type: String, default: '' },
     url: String,
     createdAt: { type: Date },
   },
   paystackSubAccount: {
-    id: { type: Number, default: "" },
-    businessName: { type: String, default: "" },
-    settlementBank: { type: String, default: "" },
-    subAccountCode: { type: String, default: "" },
-    description: { type: String, default: "" },
+    id: { type: Number, default: '' },
+    businessName: { type: String, default: '' },
+    settlementBank: { type: String, default: '' },
+    subAccountCode: { type: String, default: '' },
+    description: { type: String, default: '' },
     currency: {
       type: String,
-      default: "NGN",
+      default: 'NGN',
     },
     accountNumber: {
       type: String,
-      default: "",
+      default: '',
     },
     percentageCharge: {
       type: Number,
@@ -94,20 +94,20 @@ const UserSchema = new Schema({
     },
     primaryContactName: {
       type: String,
-      default: "",
+      default: '',
     },
     primaryContactEmail: {
       type: String,
-      default: "",
+      default: '',
     },
     primaryContactPhone: {
       type: String,
-      default: "",
+      default: '',
     },
   },
   companyLogo: {
-    id: { String, default: "" },
-    url: { String, default: "" },
+    id: { String, default: '' },
+    url: { String, default: '' },
     createdAt: { type: Date },
   },
   profilePicture: {
@@ -115,7 +115,7 @@ const UserSchema = new Schema({
     url: String,
     createdAt: { type: Date },
   },
-  subscriptions: [{ type: Number, ref: "Subscription" }],
+  subscriptions: [{ type: Number, ref: 'Subscription' }],
   joined: {
     type: Date,
     default: Date.now,
@@ -123,23 +123,23 @@ const UserSchema = new Schema({
   documents: [
     {
       type: Number,
-      ref: "Document",
+      ref: 'Document',
     },
   ],
   payments: [
     {
       type: Number,
-      ref: "Payment",
+      ref: 'Payment',
     },
   ],
   usedCoupons: [
     {
       type: Number,
-      ref: "Coupon",
+      ref: 'Coupon',
     },
   ],
 });
 
-const User = mongoose.model("User", UserSchema);
+const User = mongoose.model('User', UserSchema);
 
 module.exports = User;

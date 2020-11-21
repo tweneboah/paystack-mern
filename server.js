@@ -1,46 +1,24 @@
-const express = require("express");
-const dotenv = require("dotenv");
-const Payment = require("./models/Payment");
-const User = require("./models/User");
-const bcrypt = require("bcryptjs");
-const crypto = require("crypto");
-const Axios = require("axios");
-const cors = require("cors");
-require("./config/mongooseDbConnect")(); //Calling DB
-dotenv.config();
-const app = express();
+import express from "express";
+import dotenv from "dotenv";
+import { mongooseDbConnect } from "./config/mongooseDbConnect";
+import { errorMiddlewares, notFound } from "./middlewares/errorMiddlewares";
+import { paystackProxyRoutes } from "./routes/paystackProxyRoutes";
+import { userRoutes } from "./routes/usersRoutes";
+import { productRoute } from "./routes/productRoutes";
+import cors from "cors";
 
+mongooseDbConnect();
+dotenv.config();
+
+const app = express();
 //Middlewares
-app.use(cors());
 app.use(express.json());
 
-//Routes
-app.get("/", async (req, res) => res.send("PAYSTACK"));
+app.use(cors());
+app.options(cors());
 
-const createUser = async () => {
-  let searchUser = await User.findOne({ email: "eyiwumiolaboye@gmail.com" });
-  // console.log(searchUser);
-  if (!searchUser) {
-    let salt = bcrypt.genSaltSync(10);
-    let password = bcrypt.hashSync("Password", salt);
-    let firstUser = await User.create({
-      firstName: "Ola",
-      lastName: "Bohye",
-      email: "eyiwumiolaboye@gmail.com",
-      password,
-    });
-    console.log("user created with email " + firstUser.email);
-  } else {
-    console.log("User already exist!");
-  }
-};
-
-createUser();
-
-//NOTE:
-//The logic is that this route can handle any kind of route we may need in paystack
-//So to make it dynamic we will pass the route from the request body and the data it needs as well
-//We need to handle two routes thus post and get to paystack but for our own server we will handle all of them as post because we will make request to our and our server will talk to paystack either to post or to get
+//PAYSTACK PROXY ROUTES
+app.use("/", paystackProxyRoutes);
 
 //proxy routes
 app.post("/paystack", async (req, res) => {
@@ -98,6 +76,16 @@ app.post("/paystack/webhook", async (req, res) => {
         { new: true }
       );
       console.log(updatedPaidUser);
+
+      if (webHookData.event === "subscription.create") {
+        let userEmail = webHookData.data.customer.email;
+        let updatedUser = await User.findOneAndUpdate(
+          { email: userEmail },
+          { isSubscribed: true },
+          { new: true }
+        );
+        console.log(updatedUser);
+      }
     }
     res.send(200);
   } catch (err) {
@@ -105,6 +93,12 @@ app.post("/paystack/webhook", async (req, res) => {
     console.log(err);
   }
 });
+//USERS ROUTES
+app.use("/api/users", userRoutes);
+app.use("/api/products", productRoute);
+//Error handler
+app.use(notFound);
+app.use(errorMiddlewares);
 
 let PORT = process.env.PORT || 5000;
 
